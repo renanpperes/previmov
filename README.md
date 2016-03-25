@@ -1,8 +1,9 @@
 # previmov
 
-*previmov* é um trabalho colaborativo coordenado pelo Professor Regis A. Ely e inicialmente desenvolvido pelos seguintes alunos do [Mestrado em Economia Aplicada](http://wp.ufpel.edu.br/ppgom/) e do Curso de Graduação em Economia da Universidade Federal de Pelotas (UFPel):
+*previmov* é um trabalho colaborativo coordenado pelo Professor Regis A. Ely e inicialmente desenvolvido pelos alunos do [Mestrado em Economia Aplicada](http://wp.ufpel.edu.br/ppgom/) e do Curso de Graduação em Economia da Universidade Federal de Pelotas (UFPel). No momento os participantes são:
 
-Incluir seu nome
+Regis A. Ely - Professor de Economia (PPGOM/UFPel)
+Incluir seu nome e atividade
 
 O objetivo deste trabalho é desenvolver algoritmos para coleta, análise e previsão de preços de imóveis baseado em suas características. Inicialmente a análise será aplicada para a cidade de Pelotas-RS, podendo ser estendida para outras cidades futuramente.
 
@@ -35,11 +36,13 @@ runApp("tables")
 
 Se você deseja contribuir com este projeto você pode:
 
-1. Submeter issues neste site ao identificar problemas e/ou sugestões relevantes;
+1. Submeter [issues](https://github.com/regisely/previmov/issues) neste site ao identificar problemas e/ou sugestões relevantes;
 
 2. Criar novos scripts ou modificar arquivos existentes utilizando o git (acesse o arquivo [git-info.md](git-info.md) para mais informações);
 
 3. Enviar sugestões ou contribuições através do email regisaely@gmail.com. 
+
+Caso você queira saber mais especificamente onde contribuir você pode acessar uma [lista de tarefas](TODO.md) pendentes que está sendo constantemente atualizada.
 
 # Copyright
 
