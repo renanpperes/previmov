@@ -8,11 +8,11 @@ O objetivo deste trabalho é desenvolver algoritmos para coleta, análise e prev
 
 *previmov* é um trabalho em progresso. No momento este repositório inclui:
 
-1) Rotinas em Python para coleta de cerca de 5200 imóveis à venda na cidade de Pelotas, disponibilizados em um arquivo csv;
+1. Rotinas em Python para coleta de cerca de 5200 imóveis à venda na cidade de Pelotas, disponibilizados em um arquivo csv;
 
-2) Scripts para a análise dos dados em [R](https://www.r-project.org/);
+2. Scripts para a análise dos dados em [R](https://www.r-project.org/);
 
-3) Dois aplicativos interativos construídos através do framework [shiny](http://shiny.rstudio.com/), um para a análise visual dos dados e outro para construção de tabelas.
+3. Dois aplicativos interativos construídos através do framework [shiny](http://shiny.rstudio.com/), um para a análise visual dos dados e outro para construção de tabelas.
 
 # Como utilizar
 
@@ -35,11 +35,11 @@ runApp("tables")
 
 Se você deseja contribuir com este projeto você pode:
 
-1) Submeter issues neste site ao identificar problemas e/ou sugestões relevantes;
+1. Submeter issues neste site ao identificar problemas e/ou sugestões relevantes;
 
-2) Criar novos scripts ou modificar arquivos existentes utilizando o git (acesse o arquivo [git-info.md](https://github.com/regisely/previmov/git-info.md) para mais informações);
+2. Criar novos scripts ou modificar arquivos existentes utilizando o git (acesse o arquivo [git-info.md](git-info.md) para mais informações);
 
-3) Enviar sugestões ou contribuições através do email regisaely@gmail.com. 
+3. Enviar sugestões ou contribuições através do email regisaely@gmail.com. 
 
 # Copyright
 
