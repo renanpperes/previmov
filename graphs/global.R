@@ -3,7 +3,7 @@ if (!require("pacman")) install.packages("pacman")
 pacman::p_load(data.table, extremevalues, ggplot2)
 
 ## Load data
-data <- read.csv("../imoveis_pel.csv", sep = ";", dec = ",")
+data <- read.csv("imoveis_pel.csv", sep = ";", dec = ",")
 data <- data.table(data)
 
 ## Remove some NAs

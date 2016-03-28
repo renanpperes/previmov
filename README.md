@@ -21,19 +21,13 @@ O objetivo deste trabalho é desenvolver algoritmos para coleta, análise e prev
 
 # Como utilizar
 
-No momento você pode acessar os aplicativos interativos criados no R com o pacote shiny (em desenvolvimento). Para isso clone este repositório:
-
-```
-git clone https://github.com/regisely/previmov.git
-```
-
-No R, entre no diretório previmov e digite:
+No momento você pode acessar os aplicativos interativos criados no R com o pacote shiny (em desenvolvimento). Para isso abra a sua sessão do R e digite:
 
 ```s
-#install.packages("shiny")
+install.packages("shiny") # Instale o pacote shiny caso não o tenha
 library(shiny)
-runApp("graphs")
-runApp("tables")
+runGitHub("previmov", "regisely", subdir="graphs")
+runGitHub("previmov", "regisely", subdir="tables")
 ```
 
 # Como contribuir
