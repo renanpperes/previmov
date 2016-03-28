@@ -23,7 +23,7 @@ O objetivo deste trabalho é desenvolver algoritmos para coleta, análise e prev
 
 No momento você pode acessar os aplicativos interativos criados no R com o pacote shiny (em desenvolvimento). Para isso abra a sua sessão do R e digite:
 
-```s
+```r
 install.packages("shiny") # Instale o pacote shiny caso não o tenha
 library(shiny)
 runGitHub("previmov", "regisely", subdir="graphs")
