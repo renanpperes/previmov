@@ -9,6 +9,7 @@
 | Fabio Michel de Oliveira | Aluno mestrado PPGOM 2016|
 | Michel R. Meyer | Graduando em Economia (DECON/UFPel) |
 |  Leonardo Cordeiro | Aluno (PPGOM/UFPel)   |
+| Renan P. Peres | Aluno de Mestrado (PPGOM/UFPel) |
 |   |   |
 |   |   |
 
