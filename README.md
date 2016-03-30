@@ -5,7 +5,7 @@
 | Nome | Descrição |
 |---|---|
 | Regis A. Ely | Professor de Economia (PPGOM/UFPel) |
-|   |   |
+| Gustavo Hoffmann Moreira  | Aluno do PPGOM/UFPel  |
 |   |   |
 |   |   |
 
