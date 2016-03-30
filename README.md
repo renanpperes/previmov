@@ -12,6 +12,7 @@
 | Renan P. Peres | Aluno de Mestrado (PPGOM/UFPel) |
 | Patricia Colussi  |  Aluna de Mestrado (ppgom/UFPel)|
 | Douglas Pivatto  | Aluno de mestrado (PPGOM/UFPel)  |
+| Gustavo Hoffmann Moreira  | Aluno do PPGOM/UFPel  |
 |   |   |
 |   |   |
 
