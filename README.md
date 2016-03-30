@@ -6,6 +6,7 @@
 |---|---|
 | Regis A. Ely | Professor de Economia (PPGOM/UFPel) |
 |Rafael Parfitt|  Aluno do PPGOM |
+| Fabio Michel de Oliveira | Aluno mestrado PPGOM 2016|
 |   |   |
 |   |   |
 
