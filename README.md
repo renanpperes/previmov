@@ -8,6 +8,7 @@
 |Rafael Parfitt|  Aluno do PPGOM |
 | Fabio Michel de Oliveira | Aluno mestrado PPGOM 2016|
 | Michel R. Meyer | Graduando em Economia (DECON/UFPel) |
+|  Leonardo Cordeiro | Aluno (PPGOM/UFPel)   |
 |   |   |
 |   |   |
 
