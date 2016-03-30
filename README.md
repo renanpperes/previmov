@@ -2,19 +2,17 @@
 
 *previmov* é um trabalho colaborativo coordenado pelo Professor [Regis A. Ely](http://regisely.com) e inicialmente desenvolvido pelos alunos do [Mestrado em Economia Aplicada](http://wp.ufpel.edu.br/ppgom/) e do Curso de Graduação em Economia da Universidade Federal de Pelotas (UFPel). No momento os participantes são:
 
-| Nome | Descrição |
-|---|---|
-| Regis A. Ely | Professor de Economia (PPGOM/UFPel) |
-|Rafael Parfitt|  Aluno do PPGOM |
-| Fabio Michel de Oliveira | Aluno mestrado PPGOM 2016|
-| Michel R. Meyer | Graduando em Economia (DECON/UFPel) |
-|  Leonardo Cordeiro | Aluno (PPGOM/UFPel)   |
-| Renan P. Peres | Aluno de Mestrado (PPGOM/UFPel) |
-| Patricia Colussi  |  Aluna de Mestrado (ppgom/UFPel)|
-| Douglas Pivatto  | Aluno de mestrado (PPGOM/UFPel)  |
-| Gustavo Hoffmann Moreira  | Aluno do PPGOM/UFPel  |
-|   |   |
-|   |   |
+| Nome                     | Descrição                           |
+|--------------------------|-------------------------------------|
+| Regis A. Ely             | Professor de Economia (PPGOM/UFPel) |
+| Douglas Pivatto          | Mestrando em Economia (PPGOM/UFPel) |
+| Fabio Michel de Oliveira | Mestrando em Economia (PPGOM/UFPel) |
+| Gustavo Hoffmann Moreira | Mestrando em Economia (PPGOM/UFPel) |
+| Leonardo Cordeiro        | Mestrando em Economia (PPGOM/UFPel) |
+| Michel R. Meyer          | Graduando em Economia (DECON/UFPel) |
+| Patricia Colussi         | Mestranda em Economia (PPGOM/UFPel) |
+| Rafael Parfitt           | Mestrando em Economia (PPGOM/UFPel) |
+| Renan P. Peres           | Mestrando em Economia (PPGOM/UFPel) |
 
 O objetivo deste trabalho é desenvolver algoritmos para coleta, análise e previsão de preços de imóveis baseado em suas características. Inicialmente a análise será aplicada para a cidade de Pelotas-RS, podendo ser estendida para outras cidades futuramente.
 
