@@ -1,11 +1,11 @@
-# previmov
+﻿# previmov
 
 *previmov* é um trabalho colaborativo coordenado pelo Professor [Regis A. Ely](http://regisely.com) e inicialmente desenvolvido pelos alunos do [Mestrado em Economia Aplicada](http://wp.ufpel.edu.br/ppgom/) e do Curso de Graduação em Economia da Universidade Federal de Pelotas (UFPel). No momento os participantes são:
 
 | Nome | Descrição |
 |---|---|
 | Regis A. Ely | Professor de Economia (PPGOM/UFPel) |
-|   |   |
+| Michel R. Meyer | Graduando em Economia (DECON/UFPel) |
 |   |   |
 |   |   |
 
