@@ -10,6 +10,7 @@
 | Michel R. Meyer | Graduando em Economia (DECON/UFPel) |
 |  Leonardo Cordeiro | Aluno (PPGOM/UFPel)   |
 | Renan P. Peres | Aluno de Mestrado (PPGOM/UFPel) |
+| Patricia Colussi  |  Aluna de Mestrado (ppgom/UFPel)|
 |   |   |
 |   |   |
 
