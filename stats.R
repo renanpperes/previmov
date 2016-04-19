@@ -47,19 +47,19 @@ head(data[order(suites, decreasing=TRUE),], 10)
 ## Vagas
 head(data[order(vagas, decreasing=TRUE),], 10)
 data <- data[vagas != 150]
-data[vagas == 60, vagas := 6]
-data[vagas == 30, vagas := 3]
+data <- data[vagas != 60]
+data <- data[vagas != 30]
 data[vagas == 23, vagas := 3]
 head(data[order(vagas, decreasing=TRUE),], 10)
 ## Area
 head(data[order(area),], 10)
-data <- data[area != 1]
+data <- data[quartos == 17, area := 20000]
 data <- data[area != 2]
 data <- data[area != 4]
 data <- data[area != 5]
 data <- data[area != 6]
 data <- data[area != 8]
-data <- data[!(area == 9 & tipo == "Terreno Padrao")]
+data <- data[(area == 9 & tipo == "Terreno Padrao"), area := 90000]
 head(data[order(area),], 10)
 head(data[order(area, decreasing=TRUE),], 10)
 head(subset(data, tipo == "Apartamento")[order(area, decreasing=TRUE),], 10)
@@ -72,6 +72,7 @@ data <- data[,preco := preco/1000]
 data[,bairro := toupper(bairro)]
 
 # Tabelas de estatisticas
+## Alterar tipo Box/Garagem para Conjunto Comercial/Sala do linha preco 415mil
 (preco_tipo <- data[,.(
   media = mean(preco),
   minimo = min(preco),
@@ -109,7 +110,7 @@ data[,bairro := toupper(bairro)]
   N=length(preco)),
   by=bairro])
 
-table <- stargazer(order(preco_bairro), type = "text", summary=FALSE)
+table <- stargazer(preco_bairro, type = "text", summary=FALSE)
 
 # Visualizar dados
 ## Funcao boxplot
