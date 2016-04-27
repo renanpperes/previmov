@@ -6,6 +6,7 @@ library(ggplot2)
 library(plotly)
 library(data.table)
 library(stargazer)
+library(Metrics)
 
 # Ler dados de imoveis
 data <- read.csv("imoveis_pel.csv", sep = ";", dec = ",")
@@ -69,7 +70,7 @@ data <- data[area != 1852]
 data[,cidade := "Pelotas"]
 data <- data[,cidade := droplevels(cidade)]
 data <- data[,preco := preco/1000]
-data[,bairro := toupper(bairro)]
+data[,bairro := as.factor(toupper(bairro))]
 
 # Tabelas de estatisticas
 ## Alterar tipo Box/Garagem para Conjunto Comercial/Sala do linha preco 415mil
@@ -231,3 +232,86 @@ ggplotly()
 X11()
 windows()
 frame()
+
+## Previsões para Apartamentos
+
+aptos <- subset(data, tipo == "Apartamento")
+n_bairro <- aptos[, length(preco), by = bairro]
+princ_bairros <- as.character(n_bairro[V1 > 30, bairro])
+aptos <- subset(data, tipo == "Apartamento" & bairro %in% princ_bairros)
+aptos$bairro <- aptos[, droplevels(bairro)]
+aptos$tipo <- aptos[, droplevels(tipo)]
+aptos$endereco <- aptos[, droplevels(endereco)]
+
+## Split data into train, validate and test
+
+set.seed(4321)
+spec = c(train = .6, test = .2, validate = .2)
+g = sample(cut(seq(nrow(aptos)), nrow(aptos)*cumsum(c(0,spec)), labels = names(spec)))
+df = split(aptos, g)
+
+## Linear Regression
+
+reg1 <- lm(preco ~ area, df$train)
+summary(reg1)
+prev1 <- predict(reg1, df$test)
+View(cbind(prev1, df$test[,preco]))
+mse(df$test[,preco], prev1)
+mae(df$test[,preco], prev1)
+
+reg2 <- lm(preco ~ area + bairro + quartos + suites + vagas, df$train)
+summary(reg2)
+prev2 <- predict(reg2, df$test)
+View(cbind(prev2, df$test[,preco]))
+mse(df$test[,preco], prev2)
+mae(df$test[,preco], prev2)
+
+reg3 <- lm(preco ~ area + I(area^2) + bairro + quartos + suites + vagas, df$train)
+summary(reg3)
+prev3 <- predict(reg3, df$test)
+View(cbind(prev3, df$test[,preco]))
+mse(df$test[,preco], prev3)
+mae(df$test[,preco], prev3)
+
+reg4 <- lm(preco ~ area + I(area^2) + I(area^3) + bairro + quartos + suites + vagas, df$train)
+summary(reg4)
+prev4 <- predict(reg4, df$test)
+View(cbind(prev4, df$test[,preco]))
+mse(df$test[,preco], prev4)
+mae(df$test[,preco], prev4)
+
+## Considerando o conjunto validate
+
+prev1_val <- predict(reg1, df$validate)
+mse(df$test[,preco], prev1_val)
+mae(df$test[,preco], prev1_val)
+
+prev2_val <- predict(reg2, df$validate)
+mse(df$test[,preco], prev2_val)
+mae(df$test[,preco], prev2_val)
+
+prev3_val <- predict(reg3, df$validate)
+mse(df$test[,preco], prev3_val)
+mae(df$test[,preco], prev3_val)
+
+prev4_val <- predict(reg4, df$validate)
+mse(df$test[,preco], prev4_val)
+mae(df$test[,preco], prev4_val)
+
+reg5 <- lm(preco ~ area + I(area^2) + I(area^3) + I(area^4) + bairro + quartos + suites + vagas, df$train)
+prev5 <- predict(reg5, df$test)
+prev5_val <- predict(reg5, df$validate)
+mse(df$test[,preco], prev5_val)
+mae(df$test[,preco], prev5_val)
+
+reg6 <- lm(preco ~ area + I(area^2) + I(area^3) + I(area^4) + I(area^5) + bairro + quartos + suites + vagas, df$train)
+prev6 <- predict(reg6, df$test)
+prev6_val <- predict(reg6, df$validate)
+mse(df$test[,preco], prev6_val)
+mae(df$test[,preco], prev6_val)
+
+reg7 <- lm(preco ~ area + I(area^2) + I(area^3) + I(area^4) + bairro + quartos + I(quartos^2) + suites + vagas, df$train)
+prev7 <- predict(reg7, df$test)
+prev7_val <- predict(reg7, df$validate)
+mse(df$test[,preco], prev7_val)
+mae(df$test[,preco], prev7_val)
