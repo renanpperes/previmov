@@ -257,67 +257,59 @@ reg1 <- lm(preco ~ area, df$train)
 summary(reg1)
 prev1 <- predict(reg1, df$test)
 View(cbind(prev1, df$test[,preco]))
-mse(df$test[,preco], prev1)
-mae(df$test[,preco], prev1)
+prev1_val <- predict(reg1, df$validate)
+mse(df$validate[,preco], prev1_val)
+mae(df$validate[,preco], prev1_val)
 
 reg2 <- lm(preco ~ area + bairro + quartos + suites + vagas, df$train)
 summary(reg2)
 prev2 <- predict(reg2, df$test)
 View(cbind(prev2, df$test[,preco]))
-mse(df$test[,preco], prev2)
-mae(df$test[,preco], prev2)
+prev2_val <- predict(reg2, df$validate)
+mse(df$validate[,preco], prev2_val)
+mae(df$validate[,preco], prev2_val)
 
 reg3 <- lm(preco ~ area + I(area^2) + bairro + quartos + suites + vagas, df$train)
 summary(reg3)
 prev3 <- predict(reg3, df$test)
 View(cbind(prev3, df$test[,preco]))
-mse(df$test[,preco], prev3)
-mae(df$test[,preco], prev3)
+prev3_val <- predict(reg3, df$validate)
+mse(df$validate[,preco], prev3_val)
+mae(df$validate[,preco], prev3_val)
 
 reg4 <- lm(preco ~ area + I(area^2) + I(area^3) + bairro + quartos + suites + vagas, df$train)
 summary(reg4)
 prev4 <- predict(reg4, df$test)
 View(cbind(prev4, df$test[,preco]))
-mse(df$test[,preco], prev4)
-mae(df$test[,preco], prev4)
-
-## Considerando o conjunto validate
-
-prev1_val <- predict(reg1, df$validate)
-mse(df$validate[,preco], prev1_val)
-mae(df$validate[,preco], prev1_val)
-
-prev2_val <- predict(reg2, df$validate)
-mse(df$validate[,preco], prev2_val)
-mae(df$validate[,preco], prev2_val)
-
-prev3_val <- predict(reg3, df$validate)
-mse(df$validate[,preco], prev3_val)
-mae(df$validate[,preco], prev3_val)
-
 prev4_val <- predict(reg4, df$validate)
 mse(df$validate[,preco], prev4_val)
 mae(df$validate[,preco], prev4_val)
 
 reg5 <- lm(preco ~ area + I(area^2) + I(area^3) + I(area^4) + bairro + quartos + suites + vagas, df$train)
+summary(reg5)
 prev5 <- predict(reg5, df$test)
+View(cbind(prev5, df$test[,preco]))
 prev5_val <- predict(reg5, df$validate)
 mse(df$validate[,preco], prev5_val)
 mae(df$validate[,preco], prev5_val)
 
 reg6 <- lm(preco ~ area + I(area^2) + I(area^3) + I(area^4) + I(area^5) + bairro + quartos + suites + vagas, df$train)
+summary(reg6)
 prev6 <- predict(reg6, df$test)
+View(cbind(prev6, df$test[,preco]))
 prev6_val <- predict(reg6, df$validate)
 mse(df$validate[,preco], prev6_val)
 mae(df$validate[,preco], prev6_val)
 
 reg7 <- lm(preco ~ area + I(area^2) + I(area^3) + I(area^4) + bairro + quartos + I(quartos^2) + suites + vagas, df$train)
+summary(reg7)
 prev7 <- predict(reg7, df$test)
+View(cbind(prev7, df$test[,preco]))
 prev7_val <- predict(reg7, df$validate)
 mse(df$validate[,preco], prev7_val)
 mae(df$validate[,preco], prev7_val)
 
-# A regressão 4 parece a melhor de acordo o criterio mse e utilizando um conjunto de validação independente
+# A regressão 4 parece a melhor de acordo o criterio mse e utilizando o conjunto de validação independente
 mse(df$test[,preco], prev4)
 mae(df$test[,preco], prev4)
 View(cbind(prev4, df$test[,preco]))
@@ -370,7 +362,9 @@ y <- df$train[,preco]
 initial_theta <- matrix(rep(0,12), nrow=1)
 grad <- gradDescent(initial_theta, x, y, alpha = 0.05, niter = 100000, lambda = 0)
 theta <- grad$theta
-qplot(grad$iter, grad$cost)
+qplot(grad$iter[1:1000], grad$cost[1:1000])
+qplot(grad$iter[50000:100000], grad$cost[50000:100000])
+qplot(grad$iter[60000:100000], grad$cost[60000:100000])
 
 ## Evaluating gradient descent on validate set
 x_val <- mapFeature(df$validate[,area], degree=3)
