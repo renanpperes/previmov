@@ -7,6 +7,7 @@ library(plotly)
 library(data.table)
 library(stargazer)
 library(Metrics)
+library(caret)
 
 # Ler dados de imoveis
 data <- read.csv("imoveis_pel.csv", sep = ";", dec = ",")
@@ -147,7 +148,7 @@ ggplot(subset(data, bairro %in% names(which(table(bairro) >= 60)))) +
 ggplot(subset(data, bairro %in% names(which(table(bairro) >= 60)))) +
   aes(bairro, preco/area) +
   geom_boxplot(aes(fill=bairro), outlier.shape=NA) +
-  coord_cartesian(ylim=c(0,10000)) +
+  coord_cartesian(ylim=c(0,10)) +
   ggtitle("Preco de imoveis por bairro") +
   xlab("") +
   ylab("Preco por area")
@@ -163,7 +164,7 @@ ggplot(subset(data, tipo %in% names(which(table(tipo) >= 30)))) +
 ggplot(subset(data, tipo %in% names(which(table(tipo) >= 30)))) +
   aes(tipo, preco/area) +
   geom_boxplot(aes(fill=tipo), outlier.shape=NA) +
-  coord_cartesian(ylim=c(0,10000)) +
+  coord_cartesian(ylim=c(0,10)) +
   ggtitle("Preco de imoveis por tipo") +
   xlab("") +
   ylab("Preco por area")
@@ -176,7 +177,7 @@ ggplot(subset(data, tipo %in% tb_principais[,unique(tipo)] &
                     bairro %in% tb_principais[,unique(bairro)])) +
   aes(bairro, preco/area) +
   geom_boxplot(aes(fill=bairro)) +
-  coord_cartesian(ylim=c(0,7500)) +
+  coord_cartesian(ylim=c(0,10)) +
   theme(axis.ticks = element_blank(), axis.text.x = element_blank()) +
   ggtitle("Preco de imoveis por tipo e bairro") +
   xlab("") +
@@ -283,35 +284,117 @@ mae(df$test[,preco], prev4)
 ## Considerando o conjunto validate
 
 prev1_val <- predict(reg1, df$validate)
-mse(df$test[,preco], prev1_val)
-mae(df$test[,preco], prev1_val)
+mse(df$validate[,preco], prev1_val)
+mae(df$validate[,preco], prev1_val)
 
 prev2_val <- predict(reg2, df$validate)
-mse(df$test[,preco], prev2_val)
-mae(df$test[,preco], prev2_val)
+mse(df$validate[,preco], prev2_val)
+mae(df$validate[,preco], prev2_val)
 
 prev3_val <- predict(reg3, df$validate)
-mse(df$test[,preco], prev3_val)
-mae(df$test[,preco], prev3_val)
+mse(df$validate[,preco], prev3_val)
+mae(df$validate[,preco], prev3_val)
 
 prev4_val <- predict(reg4, df$validate)
-mse(df$test[,preco], prev4_val)
-mae(df$test[,preco], prev4_val)
+mse(df$validate[,preco], prev4_val)
+mae(df$validate[,preco], prev4_val)
 
 reg5 <- lm(preco ~ area + I(area^2) + I(area^3) + I(area^4) + bairro + quartos + suites + vagas, df$train)
 prev5 <- predict(reg5, df$test)
 prev5_val <- predict(reg5, df$validate)
-mse(df$test[,preco], prev5_val)
-mae(df$test[,preco], prev5_val)
+mse(df$validate[,preco], prev5_val)
+mae(df$validate[,preco], prev5_val)
 
 reg6 <- lm(preco ~ area + I(area^2) + I(area^3) + I(area^4) + I(area^5) + bairro + quartos + suites + vagas, df$train)
 prev6 <- predict(reg6, df$test)
 prev6_val <- predict(reg6, df$validate)
-mse(df$test[,preco], prev6_val)
-mae(df$test[,preco], prev6_val)
+mse(df$validate[,preco], prev6_val)
+mae(df$validate[,preco], prev6_val)
 
 reg7 <- lm(preco ~ area + I(area^2) + I(area^3) + I(area^4) + bairro + quartos + I(quartos^2) + suites + vagas, df$train)
 prev7 <- predict(reg7, df$test)
 prev7_val <- predict(reg7, df$validate)
-mse(df$test[,preco], prev7_val)
-mae(df$test[,preco], prev7_val)
+mse(df$validate[,preco], prev7_val)
+mae(df$validate[,preco], prev7_val)
+
+# A regressão 4 parece a melhor de acordo o criterio mse e utilizando um conjunto de validação independente
+mse(df$test[,preco], prev4)
+mae(df$test[,preco], prev4)
+View(cbind(prev4, df$test[,preco]))
+
+## Criar polinomios
+mapFeature <- function(x, degree=3) {
+    return(sapply(0:degree, function(i) x^i))
+}
+ 
+## Hypothesis function
+h <- function(theta, x) {
+    hyp <- x %*% t(theta)
+    return(hyp)
+}
+ 
+## Cost Function
+J <- function(theta, x, y, lambda=0) {
+    m <- length(y)
+    r <- theta^2
+    r[1] <- 0
+    j <- 1/(2*m) * sum((h(theta, x) - y)^2) + lambda*sum(r)
+    return(j)
+}
+ 
+gradDescent <- function(theta, x, y, alpha=0.05, niter=1000, lambda=0) {
+    m <- length(y)
+    cost <- numeric(niter)
+    it <- numeric(niter)
+    for (i in 1:niter) {
+        tt <- theta
+        tt[1] <- 0
+        dj <- (1/m) * ((t(h(theta,x)-y) %*% x) + (lambda * tt))
+        theta <- theta - alpha * dj
+        cost[i] <- J(theta, x, y, lambda = lambda)
+        it[i] <- i
+    }
+    return(list(theta = theta, cost = cost, iter = it))
+}
+
+## Running gradient descent on train set
+x <- mapFeature(df$train[,area], degree = 3)
+x_others <- data.frame(df$train[,.(quartos, suites, vagas)])
+dummies <- predict(dummyVars(~ bairro, data = df$train), newdata = df$train)
+x <- as.matrix(cbind(x, x_others, dummies[,2:6]))
+x_old <- x
+for (i in 2:12) {
+  x[,i] <- (x[,i] - mean(x[,i]))/sd(x[,i])
+}
+y <- df$train[,preco]
+initial_theta <- matrix(rep(0,12), nrow=1)
+grad <- gradDescent(initial_theta, x, y, alpha = 0.05, niter = 100000, lambda = 0)
+theta <- grad$theta
+qplot(grad$iter, grad$cost)
+
+## Evaluating gradient descent on validate set
+x_val <- mapFeature(df$validate[,area], degree=3)
+x_val_others <- data.frame(df$validate[,.(quartos, suites, vagas)])
+dummies_val <- predict(dummyVars(~ bairro, data = df$validate), newdata = df$validate)
+x_val <- as.matrix(cbind(x_val, x_val_others, dummies_val[,2:6]))
+for (i in 2:12) {
+  x_val[,i] <- (x_val[,i] - mean(x_old[,i]))/sd(x_old[,i])
+}
+pred <- h(theta, x_val)
+mse(df$validate[,preco], pred)
+mae(df$validate[,preco], pred)
+View(cbind(pred, df$validate[,preco]))
+
+## Testing other lambdas
+mses <- numeric(40)
+lambdas <- numeric(40)
+aux <- 1
+for (lamb in seq(1,21,0.5)) {
+  grad_new <- gradDescent(initial_theta, x, y, alpha = 0.05, niter = 10000, lambda = lamb)
+  theta_new <- grad_new$theta
+  pred_new <- h(theta_new, x_val)
+  mses[aux] <- mse(df$validate[,preco], pred_new)
+  lambdas[aux] <- lamb
+  aux <- aux + 1
+}
+View(cbind(mses, lambdas))
