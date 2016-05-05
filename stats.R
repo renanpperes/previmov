@@ -301,7 +301,11 @@ prev6_val <- predict(reg6, df$validate)
 mse(df$validate[,preco], prev6_val)
 mae(df$validate[,preco], prev6_val)
 
-reg7 <- lm(preco ~ area + I(area^2) + I(area^3) + I(area^4) + bairro + quartos + I(quartos^2) + suites + vagas, df$train)
+qplot(df$train[,quartos], df$train[,preco])
+qplot(df$train[,suites], df$train[,preco])
+qplot(df$train[,vagas], df$train[,preco])
+
+reg7 <- lm(preco ~ area + I(area^2) + I(area^3) + bairro + quartos + I(quartos^2) + I(quartos^3) + suites + I(suites^2) + I(suites^3) + vagas + I(vagas^2) + I(vagas^3), df$train)
 summary(reg7)
 prev7 <- predict(reg7, df$test)
 View(cbind(prev7, df$test[,preco]))
@@ -309,10 +313,10 @@ prev7_val <- predict(reg7, df$validate)
 mse(df$validate[,preco], prev7_val)
 mae(df$validate[,preco], prev7_val)
 
-# A regressão 4 parece a melhor de acordo o criterio mse e utilizando o conjunto de validação independente
-mse(df$test[,preco], prev4)
-mae(df$test[,preco], prev4)
-View(cbind(prev4, df$test[,preco]))
+# A regressão 7 parece a melhor de acordo o criterio mse e mae utilizando o conjunto de validação independente
+mse(df$test[,preco], prev7)
+mae(df$test[,preco], prev7)
+View(cbind(prev7, df$test[,preco]))
 
 ## Criar polinomios
 mapFeature <- function(x, degree=3) {
@@ -345,33 +349,41 @@ gradDescent <- function(theta, x, y, alpha=0.05, niter=1000, lambda=0) {
         theta <- theta - alpha * dj
         cost[i] <- J(theta, x, y, lambda = lambda)
         it[i] <- i
-    }
+   }
     return(list(theta = theta, cost = cost, iter = it))
 }
 
 ## Running gradient descent on train set
-x <- mapFeature(df$train[,area], degree = 3)
-x_others <- data.frame(df$train[,.(quartos, suites, vagas)])
+x_area <- mapFeature(df$train[,area], degree = 3)
+x_quartos <- mapFeature(df$train[,quartos], degree = 3)
+x_suites <- mapFeature(df$train[,suites], degree = 3)
+x_vagas <- mapFeature(df$train[,vagas], degree = 3)
+x <- data.frame(cbind(x_area, x_quartos[,2:4], x_suites[,2:4], x_vagas[,2:4]))
 dummies <- predict(dummyVars(~ bairro, data = df$train), newdata = df$train)
-x <- as.matrix(cbind(x, x_others, dummies[,2:6]))
+x <- as.matrix(cbind(x, dummies[,2:6]))
 x_old <- x
-for (i in 2:12) {
+for (i in 2:ncol(x)) {
   x[,i] <- (x[,i] - mean(x[,i]))/sd(x[,i])
 }
 y <- df$train[,preco]
-initial_theta <- matrix(rep(0,12), nrow=1)
-grad <- gradDescent(initial_theta, x, y, alpha = 0.05, niter = 100000, lambda = 0)
+initial_theta <- matrix(rep(0,ncol(x)), nrow=1)
+grad <- gradDescent(initial_theta, x, y, alpha = 0.3, niter = 100000, lambda = 0)
 theta <- grad$theta
-qplot(grad$iter[1:1000], grad$cost[1:1000])
+qplot(grad$iter, grad$cost)
+qplot(grad$iter[1:10000], grad$cost[1:10000])
 qplot(grad$iter[50000:100000], grad$cost[50000:100000])
 qplot(grad$iter[60000:100000], grad$cost[60000:100000])
+## Note que com alpha = 0.3 o algoritmo converge com a maior rapidez para o modelo 7. Sao necessarias quase 60000 iteracoes para a convergencia. Acima de 0.3, o algoritmo passa a ter problemas de convergencia.
 
 ## Evaluating gradient descent on validate set
-x_val <- mapFeature(df$validate[,area], degree=3)
-x_val_others <- data.frame(df$validate[,.(quartos, suites, vagas)])
+x_val_area <- mapFeature(df$validate[,area], degree = 3)
+x_val_quartos <- mapFeature(df$validate[,quartos], degree = 3)
+x_val_suites <- mapFeature(df$validate[,suites], degree = 3)
+x_val_vagas <- mapFeature(df$validate[,vagas], degree = 3)
+x_val <- data.frame(cbind(x_val_area, x_val_quartos[,2:4], x_val_suites[,2:4], x_val_vagas[,2:4]))
 dummies_val <- predict(dummyVars(~ bairro, data = df$validate), newdata = df$validate)
-x_val <- as.matrix(cbind(x_val, x_val_others, dummies_val[,2:6]))
-for (i in 2:12) {
+x_val <- as.matrix(cbind(x_val, dummies_val[,2:6]))
+for (i in 2:ncol(x_val)) {
   x_val[,i] <- (x_val[,i] - mean(x_old[,i]))/sd(x_old[,i])
 }
 pred <- h(theta, x_val)
@@ -380,15 +392,34 @@ mae(df$validate[,preco], pred)
 View(cbind(pred, df$validate[,preco]))
 
 ## Testing other lambdas
-mses <- numeric(40)
-lambdas <- numeric(40)
+mses <- numeric(10)
+lambdas <- numeric(10)
 aux <- 1
-for (lamb in seq(1,21,0.5)) {
-  grad_new <- gradDescent(initial_theta, x, y, alpha = 0.05, niter = 10000, lambda = lamb)
+for (lamb in seq(0.6,1.5,0.1)) {
+  grad_new <- gradDescent(initial_theta, x, y, alpha = 0.3, niter = 100000, lambda = lamb)
   theta_new <- grad_new$theta
   pred_new <- h(theta_new, x_val)
   mses[aux] <- mse(df$validate[,preco], pred_new)
   lambdas[aux] <- lamb
   aux <- aux + 1
 }
-View(cbind(mses, lambdas))
+View(cbind(mses, maes, lambdas))
+## Melhor modelo até o momento parece ser a regressão 7 com regularização (lambda = 1.1)
+
+## Evaluating mse and mae of best model in test set
+grad <- gradDescent(initial_theta, x, y, alpha = 0.3, niter = 100000, lambda = 1.1)
+theta <- grad$theta
+x_test_area <- mapFeature(df$test[,area], degree = 3)
+x_test_quartos <- mapFeature(df$test[,quartos], degree = 3)
+x_test_suites <- mapFeature(df$test[,suites], degree = 3)
+x_test_vagas <- mapFeature(df$test[,vagas], degree = 3)
+x_test <- data.frame(cbind(x_test_area, x_test_quartos[,2:4], x_test_suites[,2:4], x_test_vagas[,2:4]))
+dummies_test <- predict(dummyVars(~ bairro, data = df$test), newdata = df$test)
+x_test <- as.matrix(cbind(x_test, dummies_test[,2:6]))
+for (i in 2:ncol(x_test)) {
+  x_test[,i] <- (x_test[,i] - mean(x_old[,i]))/sd(x_old[,i])
+}
+pred <- h(theta, x_test)
+mse(df$test[,preco], pred)
+mae(df$test[,preco], pred)
+View(cbind(pred, df$test[,preco]))
