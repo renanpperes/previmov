@@ -97,7 +97,7 @@ mses <- numeric(10)
 lambdas <- numeric(10)
 aux <- 1
 for (lamb in seq(0.6,1.5,0.1)) {
-  grad_new <- gradDescent(initial_theta, x, y, alpha = 0.3, niter = 100000, lambda = lamb)
+  grad_new <- gradDescent(initial_theta, x, y, alpha = 0.3, niter = 60000, lambda = lamb)
   theta_new <- grad_new$theta
   pred_new <- h(theta_new, x_val)
   mses[aux] <- mse(df$validate[,preco], pred_new)
@@ -108,7 +108,7 @@ View(cbind(mses, lambdas))
 # Melhor modelo ate o momento parece ser a regressao 7 com regularizacao (lambda = 1.1)
 
 # Avaliando mse e mae com melhor modelo no test set
-grad <- gradDescent(initial_theta, x, y, alpha = 0.3, niter = 100000, lambda = 1.1)
+grad <- gradDescent(initial_theta, x, y, alpha = 0.3, niter = 60000, lambda = 1.1)
 theta <- grad$theta
 x_test_area <- mapFeature(df$test[,area], degree = 3)
 x_test_quartos <- mapFeature(df$test[,quartos], degree = 3)
@@ -124,3 +124,128 @@ pred <- h(theta, x_test)
 mse(df$test[,preco], pred)
 mae(df$test[,preco], pred)
 View(cbind(pred, df$test[,preco]))
+
+# Podemos melhor o método de validacao e avaliar novamente qual o melhor parametro de regularizacao
+
+# 10-fold cross validation sem repeticao
+aptos_rd <- aptos[sample(nrow(aptos)),]
+folds <- cut(seq(1,nrow(aptos_rd)), breaks=10, labels=FALSE)
+pred_cv <- list()
+grads <- list()
+thetas <- list()
+mse_cv <- vector(mode="list", length=10)
+mae_cv <- vector(mode="list", length=10)
+lambdas <- numeric(10)
+for (i in 1:10) {
+  testIndexes <- which(folds==i, arr.ind=TRUE)
+  testData <- aptos_rd[testIndexes, ]
+  trainData <- aptos_rd[-testIndexes, ]
+  x_area <- mapFeature(trainData[,area], degree = 3)
+  x_quartos <- mapFeature(trainData[,quartos], degree = 3)
+  x_suites <- mapFeature(trainData[,suites], degree = 3)
+  x_vagas <- mapFeature(trainData[,vagas], degree = 3)
+  x_raw <- data.frame(cbind(x_area, x_quartos[,2:4], x_suites[,2:4], x_vagas[,2:4]))
+  dummies <- predict(dummyVars(~ bairro, data = trainData), newdata = trainData)
+  x_raw <- as.matrix(cbind(x_raw, dummies[,2:6]))
+  y <- trainData[,preco]
+  x <- x_raw
+  for (k in 2:ncol(x)) {
+    x[,k] <- (x_raw[,k] - mean(x_raw[,k]))/sd(x_raw[,k])
+  }
+  initial_theta <- matrix(rep(0,ncol(x)), nrow=1)
+  aux <- 1
+  for (lamb in seq(1,10,1)) {
+    grads[[aux]] <- gradDescent(initial_theta, x, y, alpha = 0.3, niter = 60000, lambda = lamb)
+    thetas[[aux]] <- grads[[aux]]$theta
+    lambdas[aux] <- lamb
+    aux <- aux + 1
+  }
+  x_test_area <- mapFeature(testData[,area], degree = 3)
+  x_test_quartos <- mapFeature(testData[,quartos], degree = 3)
+  x_test_suites <- mapFeature(testData[,suites], degree = 3)
+  x_test_vagas <- mapFeature(testData[,vagas], degree = 3)
+  x_test <- data.frame(cbind(x_test_area, x_test_quartos[,2:4], x_test_suites[,2:4], x_test_vagas[,2:4]))
+  dummies_test <- predict(dummyVars(~ bairro, data = testData), newdata = testData)
+  x_test <- as.matrix(cbind(x_test, dummies_test[,2:6]))
+  for (k in 2:ncol(x_test)) {
+    x_test[,k] <- (x_test[,k] - mean(x_raw[,k]))/sd(x_raw[,k])
+  }
+  for (j in 1:length(grads)) {
+    pred_cv[[j]] <- h(thetas[[j]], x_test)
+    mse_cv[[j]][i] <- mse(testData[,preco], pred_cv[[j]])
+    mae_cv[[j]][i] <- mae(testData[,preco], pred_cv[[j]])
+  }
+}
+lapply(mse_cv, mean)
+lapply(mae_cv, mean)
+lambdas
+
+# 10-fold cv usando caret package (stratified samples)
+flds <- createFolds(aptos[,preco], k = 10, list = TRUE, returnTrain = FALSE)
+pred_cv <- list()
+grads <- list()
+thetas <- list()
+mse_cv <- vector(mode="list", length=10)
+mae_cv <- vector(mode="list", length=10)
+lambdas <- numeric(10)
+aux <- 1
+for (fold in flds) {
+  testData <- aptos[fold,]
+  trainData <- aptos[-fold,]
+  x_area <- mapFeature(trainData[,area], degree = 3)
+  x_quartos <- mapFeature(trainData[,quartos], degree = 3)
+  x_suites <- mapFeature(trainData[,suites], degree = 3)
+  x_vagas <- mapFeature(trainData[,vagas], degree = 3)
+  x_raw <- data.frame(cbind(x_area, x_quartos[,2:4], x_suites[,2:4], x_vagas[,2:4]))
+  dummies <- predict(dummyVars(~ bairro, data = trainData), newdata = trainData)
+  x_raw <- as.matrix(cbind(x_raw, dummies[,2:6]))
+  y <- trainData[,preco]
+  x <- x_raw
+  for (k in 2:ncol(x)) {
+    x[,k] <- (x_raw[,k] - mean(x_raw[,k]))/sd(x_raw[,k])
+  }
+  initial_theta <- matrix(rep(0,ncol(x)), nrow=1)
+  aux2 <- 1
+  for (lamb in seq(1,10,1)) {
+    grads[[aux2]] <- gradDescent(initial_theta, x, y, alpha = 0.3, niter = 60000, lambda = lamb)
+    thetas[[aux2]] <- grads[[aux2]]$theta
+    lambdas[aux2] <- lamb
+    aux2 <- aux2 + 1
+  }
+  x_test_area <- mapFeature(testData[,area], degree = 3)
+  x_test_quartos <- mapFeature(testData[,quartos], degree = 3)
+  x_test_suites <- mapFeature(testData[,suites], degree = 3)
+  x_test_vagas <- mapFeature(testData[,vagas], degree = 3)
+  x_test <- data.frame(cbind(x_test_area, x_test_quartos[,2:4], x_test_suites[,2:4], x_test_vagas[,2:4]))
+  dummies_test <- predict(dummyVars(~ bairro, data = testData), newdata = testData)
+  x_test <- as.matrix(cbind(x_test, dummies_test[,2:6]))
+  for (k in 2:ncol(x_test)) {
+    x_test[,k] <- (x_test[,k] - mean(x_raw[,k]))/sd(x_raw[,k])
+  }
+  for (j in 1:length(grads)) {
+    pred_cv[[j]] <- h(thetas[[j]], x_test)
+    mse_cv[[j]][aux] <- mse(testData[,preco], pred_cv[[j]])
+    mae_cv[[j]][aux] <- mae(testData[,preco], pred_cv[[j]])
+  }
+  aux <- aux + 1
+}
+lapply(mse_cv, mean)
+lapply(mae_cv, mean)
+lambdas
+
+# 10-fold 100-repeated cv usando funcao train do pacote caret
+x_area <- mapFeature(aptos[,area], degree = 3)
+x_quartos <- mapFeature(aptos[,quartos], degree = 3)
+x_suites <- mapFeature(aptos[,suites], degree = 3)
+x_vagas <- mapFeature(aptos[,vagas], degree = 3)
+x_raw <- data.frame(cbind(x_area, x_quartos[,2:4], x_suites[,2:4], x_vagas[,2:4]))
+dummies <- predict(dummyVars(~ bairro, data = aptos), newdata = aptos)
+x_raw <- as.matrix(cbind(x_raw, dummies[,2:6]))
+y <- aptos[,preco]
+x <- x_raw
+for (i in 2:ncol(x)) {
+  x[,i] <- (x_raw[,i] - mean(x_raw[,i]))/sd(x_raw[,i])
+}
+
+#fitControl <- trainControl(method = "repeatedcv", number = 10, repeats = 100)
+#trainfit <- train(x = x, y = y, method = "gradDescent",  trControl = fitControl)
