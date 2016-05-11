@@ -76,7 +76,7 @@ qplot(grad$iter[60000:100000], grad$cost[60000:100000])
 # convergencia. Acima de 0.3, o algoritmo passa a ter problemas de
 # convergencia.
 
-# Avaliando gradient descent no train set
+# Avaliando gradient descent no validate set
 x_val_area <- mapFeature(df$validate[,area], degree = 3)
 x_val_quartos <- mapFeature(df$validate[,quartos], degree = 3)
 x_val_suites <- mapFeature(df$validate[,suites], degree = 3)

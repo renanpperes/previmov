@@ -90,7 +90,6 @@ View(cbind(prev7, df$test[,preco]))
 # Three-way validation com montecarlo
 models <- list()
 prevs <- list()
-prevs_test <- list()
 mses <- vector(mode="list", length=7)
 maes <- vector(mode="list", length=7)
 for (i in 1:1000) {
