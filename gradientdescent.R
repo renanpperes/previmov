@@ -47,7 +47,7 @@ gradDescent <- function(theta, x, y, alpha=0.05, niter=1000, lambda=0) {
     return(list(theta = theta, cost = cost, iter = it))
 }
 
-# Criando polinomios e dummies para regressoes no train set
+
 x_area <- mapFeature(df$train[,area], degree = 3)
 x_quartos <- mapFeature(df$train[,quartos], degree = 3)
 x_suites <- mapFeature(df$train[,suites], degree = 3)
