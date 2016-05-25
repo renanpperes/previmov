@@ -51,10 +51,11 @@ reg.poly
 (mae.regpoly <- mae(reg.poly$pred$obs*adj1+adj2, reg.poly$pred$pred*adj1+adj2))
 
 # Rede neural com nnet
-my.grid <- expand.grid(.decay = c(0.003, 0.001, 5e-4), .size = c(3, 4, 5))
+my.grid <- expand.grid(.decay = c(0.003, 0.001, 5e-4), .size = c(2, 3, 4, 5))
 set.seed(21)
 nnetfit <- train(formula1, data = scaledTrain, method = "nnet", maxit = 100, tuneGrid = my.grid, trace = F, lineout = 1, trControl = fitControl, metric = "MAE", maximize = FALSE)
 nnetfit
+plot(nnetfit)
 (mse.nnet <- mse(nnetfit$pred$obs*adj1+adj2, nnetfit$pred$pred*adj1+adj2))
 (mae.nnet <- mae(nnetfit$pred$obs*adj1+adj2, nnetfit$pred$pred*adj1+adj2))
 
@@ -63,6 +64,7 @@ my.grid2 <- expand.grid(.layer1 = c(2, 3, 4), .layer2 = c(4), .layer3 = c(0))
 set.seed(21)
 neuralnetfit <- train(formula1, data = scaledTrain, method = "neuralnet", tuneGrid = my.grid2, trControl = fitControl)
 neuralnetfit
+plot(neuralnetfit)
 (mse.neuralnet <- mse(neuralnetfit$pred$obs*adj1+adj2, neuralnetfit$pred$pred*adj1+adj2))
 (mae.neuralnet <- mae(neuralnetfit$pred$obs*adj1+adj2, neuralnetfit$pred$pred*adj1+adj2))
 
@@ -78,6 +80,7 @@ svmGrid <- expand.grid(sigma= 2^c(-10, -5, 0), C= 2^c(0:5))
 set.seed(21)
 svm.radial <- train(formula1, data = scaledTrain, method = "svmRadial", trControl=fitControl, metric = "MAE", maximize = FALSE, tuneGrid = svmGrid)
 svm.radial
+plot(svm.radial)
 (mse.svmradial <- mse(svm.radial$pred$obs*adj1+adj2, svm.radial$pred$pred*adj1+adj2))
 (mae.svmradial <- mae(svm.radial$pred$obs*adj1+adj2, svm.radial$pred$pred*adj1+adj2))
 
