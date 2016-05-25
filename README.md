@@ -18,11 +18,15 @@ O objetivo deste trabalho é desenvolver algoritmos para coleta, análise e prev
 
 *previmov* é um trabalho em progresso. No momento este repositório inclui:
 
-1. Rotinas em Python para coleta de cerca de 5200 imóveis à venda na cidade de Pelotas, disponibilizados em um arquivo csv;
+1. Rotina em Python para coleta de cerca de 5200 imóveis à venda na cidade de Pelotas, disponibilizados em um arquivo csv;
 
-2. Scripts para a análise dos dados em [R](https://www.r-project.org/);
+2. Scripts `tabela.R` e `graficos.R` para a análise dos dados em [R](https://www.r-project.org/);
 
-3. Dois aplicativos interativos construídos através do framework [shiny](http://shiny.rstudio.com/), um para a análise visual dos dados e outro para construção de tabelas.
+3. Dois aplicativos interativos construídos através do framework [shiny](http://shiny.rstudio.com/), um para a análise visual dos dados e outro para construção de tabelas descritivas;
+
+4. Scripts `regressoes.R`, `gradientdescent.R` e `neuralnetwork.R` que implementam modelos de previsão de preços de imóveis no R, bem como métodos de validação;
+
+5. Script `train.R` que utiliza a função train do pacote [caret](https://cran.r-project.org/web/packages/caret/index.html) para estimar diversos modelos de previsão e escolher o melhor após compará-los através de 10-fold cross validation. 
 
 # Como utilizar
 
@@ -34,6 +38,13 @@ library(shiny)
 runGitHub("previmov", "regisely", subdir="graphs")
 runGitHub("previmov", "regisely", subdir="tables")
 ```
+
+Você também pode clonar este repositório para testar todos os scripts em R utilizando o seguinte comando no seu terminal:
+
+```
+git clone https://github.com/regisely/previmov.git
+```
+Note que é este comando irá criar uma pasta com nome previmov no diretório atual contendo todos os arquivos. É necessária a instalação do [git](https://git-scm.com/downloads) antes. Caso você não queira instalar o git pode baixar todos os arquivos zipados [neste link](https://github.com/regisely/previmov/archive/master.zip).
 
 # Como contribuir
 

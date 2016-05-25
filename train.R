@@ -63,8 +63,8 @@ my.grid2 <- expand.grid(.layer1 = c(2, 3, 4), .layer2 = c(4), .layer3 = c(0))
 set.seed(21)
 neuralnetfit <- train(formula1, data = scaledTrain, method = "neuralnet", tuneGrid = my.grid2, trControl = fitControl)
 neuralnetfit
-(mse.neuralnet <- mse(neuralnetfit$pred$obs*adj1+adj2, neuralnetfit$pred$obs*adj1+adj2))
-(mae.neuralnet <- mae(neuralnetfit$pred$obs*adj1+adj2, neuralnetfit$pred$obs*adj1+adj2))
+(mse.neuralnet <- mse(neuralnetfit$pred$obs*adj1+adj2, neuralnetfit$pred$pred*adj1+adj2))
+(mae.neuralnet <- mae(neuralnetfit$pred$obs*adj1+adj2, neuralnetfit$pred$pred*adj1+adj2))
 
 # Linear support vector regression
 set.seed(21)
@@ -90,7 +90,8 @@ eval <- data.frame(reglinear=c(mse.reglinear, mae.reglinear),
                    nnet=c(mse.nnet, mae.nnet),
                    neuralnet=c(mse.neuralnet, mae.neuralnet),
                    svmlinear=c(mse.svmlinear, mae.svmlinear),
-                   svmradial=c(mse.svmradial, mase.svmradial))
+                   svmradial=c(mse.svmradial, mae.svmradial))
+rownames(eval) <- c("MSE", "MAE")
 eval
 
 # Criar variaveis do conjunto test e escalonar dados
