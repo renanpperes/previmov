@@ -47,7 +47,7 @@ gradDescent <- function(theta, x, y, alpha=0.05, niter=1000, lambda=0) {
     return(list(theta = theta, cost = cost, iter = it))
 }
 
-
+# Criar variaveis
 x_area <- mapFeature(df$train[,area], degree = 3)
 x_quartos <- mapFeature(df$train[,quartos], degree = 3)
 x_suites <- mapFeature(df$train[,suites], degree = 3)
@@ -125,7 +125,7 @@ mse(df$test[,preco], pred)
 mae(df$test[,preco], pred)
 View(cbind(pred, df$test[,preco]))
 
-# Podemos melhor o método de validacao e avaliar novamente qual o melhor parametro de regularizacao
+# Podemos melhorar o método de validacao e selecionar novamente o parametro de regularizacao
 
 # 10-fold cross validation sem repeticao
 aptos_rd <- aptos[sample(nrow(aptos)),]
@@ -154,7 +154,7 @@ for (i in 1:10) {
   }
   initial_theta <- matrix(rep(0,ncol(x)), nrow=1)
   aux <- 1
-  for (lamb in seq(1,10,1)) {
+  for (lamb in seq(0.5,5,0.5)) {
     grads[[aux]] <- gradDescent(initial_theta, x, y, alpha = 0.3, niter = 60000, lambda = lamb)
     thetas[[aux]] <- grads[[aux]]$theta
     lambdas[aux] <- lamb
@@ -206,7 +206,7 @@ for (fold in flds) {
   }
   initial_theta <- matrix(rep(0,ncol(x)), nrow=1)
   aux2 <- 1
-  for (lamb in seq(1,10,1)) {
+  for (lamb in seq(0.5,5,0.5)) {
     grads[[aux2]] <- gradDescent(initial_theta, x, y, alpha = 0.3, niter = 60000, lambda = lamb)
     thetas[[aux2]] <- grads[[aux2]]$theta
     lambdas[aux2] <- lamb
@@ -232,20 +232,3 @@ for (fold in flds) {
 lapply(mse_cv, mean)
 lapply(mae_cv, mean)
 lambdas
-
-# 10-fold 100-repeated cv usando funcao train do pacote caret
-x_area <- mapFeature(aptos[,area], degree = 3)
-x_quartos <- mapFeature(aptos[,quartos], degree = 3)
-x_suites <- mapFeature(aptos[,suites], degree = 3)
-x_vagas <- mapFeature(aptos[,vagas], degree = 3)
-x_raw <- data.frame(cbind(x_area, x_quartos[,2:4], x_suites[,2:4], x_vagas[,2:4]))
-dummies <- predict(dummyVars(~ bairro, data = aptos), newdata = aptos)
-x_raw <- as.matrix(cbind(x_raw, dummies[,2:6]))
-y <- aptos[,preco]
-x <- x_raw
-for (i in 2:ncol(x)) {
-  x[,i] <- (x_raw[,i] - mean(x_raw[,i]))/sd(x_raw[,i])
-}
-
-#fitControl <- trainControl(method = "repeatedcv", number = 10, repeats = 100)
-#trainfit <- train(x = x, y = y, method = "gradDescent",  trControl = fitControl)
