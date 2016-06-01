@@ -20,13 +20,15 @@ O objetivo deste trabalho é desenvolver algoritmos para coleta, análise e prev
 
 1. Rotina em Python para coleta de cerca de 5200 imóveis à venda na cidade de Pelotas, disponibilizados em um arquivo csv;
 
-2. Scripts `tabela.R` e `graficos.R` para a análise dos dados em [R](https://www.r-project.org/);
+2. Script `dados.R` e `dados_novos.R` para o carregamento dos dados e filtragem dos outliers. O primeiro faz a filtragem manualmente para o arquivo `imoveis_pel.csv`, enquanto que o segundo utiliza um algoritmo de detecção de outliers e pode ser aplicado para qualquer atualização da base;
 
-3. Dois aplicativos interativos construídos através do framework [shiny](http://shiny.rstudio.com/), um para a análise visual dos dados e outro para construção de tabelas descritivas;
+3. Scripts `tabela.R` e `graficos.R` para a análise dos dados em [R](https://www.r-project.org/);
 
-4. Scripts `regressoes.R`, `gradientdescent.R` e `neuralnetwork.R` que implementam modelos de previsão de preços de imóveis no R, bem como métodos de validação;
+4. Dois aplicativos interativos construídos através do framework [shiny](http://shiny.rstudio.com/), um para a análise visual dos dados e outro para construção de tabelas descritivas;
 
-5. Script `train.R` que utiliza a função train do pacote [caret](https://cran.r-project.org/web/packages/caret/index.html) para estimar diversos modelos de previsão e escolher o melhor após compará-los através de 10-fold cross validation. 
+5. Scripts `regressoes.R`, `gradientdescent.R` e `neuralnetwork.R` que implementam modelos de previsão de preços de imóveis no R, bem como métodos de validação;
+
+6. Script `train.R` que utiliza a função train do pacote [caret](https://cran.r-project.org/web/packages/caret/index.html) para estimar diversos modelos de previsão e escolher o melhor após compará-los através de 10-fold cross validation. 
 
 # Como utilizar
 
