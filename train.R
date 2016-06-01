@@ -126,7 +126,7 @@ pred_test <- predict(svm.radial2, newdata = scaledTest)
 pred_test <- pred_test*adj1+adj2
 mse(pred_test, testData$preco)
 mae(pred_test, testData$preco)
-View(cbind(data.predict, testData$preco))
+View(cbind(pred_test, testData$preco))
 
 # Observar maiores erros de previsao
 ## Conjunto train

@@ -33,7 +33,7 @@ No momento as seguintes medidas podem ser tomadas para a melhoria na previsão o
 - Descobrir outras combinações e interações entre variáveis que levam a erros de previsão menores
 - Fazer uma busca mais detalhada dos parâmetros nos modelos implementados
 - Melhorar a automatização da busca pelos parâmetros para dados novos
-- Implementar outros modelos de previsão que possam gerar resultados melhores
+- Implementar outros modelos de previsão que possam gerar resultados melhores (ver a lista do [pacote caret](https://topepo.github.io/caret/modelList.html))
 
 ### Modelos de validação
 
