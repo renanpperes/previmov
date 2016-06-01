@@ -3,8 +3,11 @@
 Para melhorar a capacidade de previsão de um modelo devemos trabalhar em 4 esferas principais que são complementares entre si:
 
 i) Obtenção de dados
+
 ii) Complexidade dos modelos
+
 iii) Métodos para avaliação e validação dos modelos
+
 iv) Eficiência computacional
 
 No momento as seguintes medidas podem ser tomadas para a melhoria na previsão ou para a melhor visualização e organização dos dados e scripts:
