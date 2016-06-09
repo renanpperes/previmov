@@ -8,6 +8,7 @@
 | Douglas Pivatto          | Mestrando em Economia (PPGOM/UFPel) |
 | Fabio Michel de Oliveira | Mestrando em Economia (PPGOM/UFPel) |
 | Gustavo Hoffmann Moreira | Mestrando em Economia (PPGOM/UFPel) |
+| Jean Venecian            | Mestrando em Economia (PPGOM/UFPel) |
 | Leonardo Cordeiro        | Mestrando em Economia (PPGOM/UFPel) |
 | Michel R. Meyer          | Graduando em Economia (DECON/UFPel) |
 | Patricia Colussi         | Mestranda em Economia (PPGOM/UFPel) |
