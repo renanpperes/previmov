@@ -19,7 +19,7 @@ O objetivo deste trabalho é desenvolver algoritmos para coleta, análise e prev
 
 *previmov* é um trabalho em progresso. No momento este repositório inclui:
 
-1. Rotina em Python para coleta de cerca de 5200 imóveis à venda na cidade de Pelotas, disponibilizados em um arquivo csv;
+1. Rotina em Python 2.7 para coleta de cerca de 5200 imóveis à venda na cidade de Pelotas, disponibilizados em um arquivo csv;
 
 2. Script `dados.R` e `dados_novos.R` para o carregamento dos dados e filtragem dos outliers. O primeiro faz a filtragem manualmente para o arquivo `imoveis_pel.csv`, enquanto que o segundo utiliza um algoritmo de detecção de outliers e pode ser aplicado para qualquer atualização da base;
 
